@@ -1,13 +1,18 @@
 
-export interface Categorie{
-    id:number,
-    name: string,
-    slug?: string,
-    image: string,
-    createdAt ?:number,
-    updatedAt?: number
-}
-
+// export interface Categorie{
+//     id:number,
+//     name: string,
+//     slug?: string,
+//     image: string,
+//     createdAt ?:number,
+//     updatedAt?: number
+// }
+export interface Category {
+    _id: string;
+    name: string;
+    slug: string;
+    image: string;
+  }
 export interface Product{
     id: string,
     title?:string,
@@ -16,12 +21,7 @@ export interface Product{
     quantity?: number,
     price?: number,
     imageCover?: string,
-    category:{
-        id?:number,
-        name?: string,
-        slug?: string,
-        image?: string,
-    },
+    category:Category
 }
 
 export interface User{

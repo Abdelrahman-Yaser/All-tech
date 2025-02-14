@@ -72,23 +72,23 @@ export const Header = () => {
             Product
           </Link>
 
-          <Link
-            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
-            to="/Login"
-          >
-            Login
-          </Link>
-
-          <Link
-            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
-            to="/Register"
-          >
-            Register
-          </Link>
+       
         </div>
+          <div className="flex">
+          <Link
+            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1 mr-4"
+            to="/SignIn"
+          >
+            SignIn
+          </Link>
 
-        {/* toogle */}
-        <button
+          <Link
+            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
+            to="/SignUp"
+          >
+            SignUp
+          </Link>
+          <button
           onClick={toggleDarkMode}
           className="ml-4 bg-cyan-400 py-1 px-4 rounded dark:hover:bg-cyan-400 flex items-center"
           aria-label="Toggle Dark Mode"
@@ -100,6 +100,7 @@ export const Header = () => {
           onClick={toggleNavbar}
           className="text-white md:hidden ml-4"
           aria-label="Toggle Navigation"
+          title="Dark"
         >
           {isOpen ? (
             <svg
@@ -133,6 +134,8 @@ export const Header = () => {
             </svg>
           )}
         </button>
+          </div>
+
       </div>
     </nav>
   );

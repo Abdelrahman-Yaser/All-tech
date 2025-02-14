@@ -42,18 +42,42 @@ export const Products = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-      {data.map((product: Product) => (
-        <ProductCard
-          key={product.id}
-          id={product.id}
-          title={product.title}
-          imageCover={product.imageCover}
-          price={product.price}
-          description={product.description}
-          category={product.category}
-        />
-      ))}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 px-4 md:px-8 lg:px-12 py-6">
+  {data.map((product: Product) => (
+    
+    <div className="relative">
+      {/* Favorite Icon (SVG) */}
+      <button className="absolute top-4 left-4 z-40 text-gray-500 hover:text-red-500 transition duration-200" title=" Add to Wishlist">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  className="w-6 h-6"
+>
+  <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    d="M12 21C12 21 5 14.5 5 9.5C5 6.42 7.42 4 10.5 4C11.74 4 13 4.81 13 5.5C13 5.5 14 4 15 4C18.08 4 20.5 6.42 20.5 9.5C20.5 14.5 12 21 12 21Z"
+  />
+</svg>
+
+      </button>
+
+      {/* Product Card */}
+      <ProductCard
+        key={product.id}
+        id={product.id}
+        title={product.title}
+        imageCover={product.imageCover}
+        price={product.price}
+        description={product.description}
+        category={product.category}
+      />
     </div>
+  ))}
+</div>
+
   );
 };

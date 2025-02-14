@@ -3,8 +3,8 @@ import Home from "../pages/Home";
 import Error from "../pages/Error";
 import Product from "../pages/Product";
 import { Layout } from "../Components/layout";
-import { Login } from "../pages/Login";
-import { Register } from "../pages/Register";
+import SignIn  from "../pages/SignIn";
+import  SignUp  from "../pages/SignUp";
 
 export const router = createBrowserRouter([
   {
@@ -21,12 +21,12 @@ export const router = createBrowserRouter([
         element: <Product />,
       },
       {
-        path:"/Login",
-        element:<Login/>
+        path:"/SignIn",
+        element:<SignIn/>
       },
       {
-        path:"/Register",
-        element:<Register/>
+        path:"/SignUp",
+        element:<SignUp/>
     
       }
     ],
