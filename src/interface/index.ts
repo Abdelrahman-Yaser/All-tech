@@ -1,12 +1,14 @@
+export interface User {
+  name: string
+  email: string;
+  
+}
 
-// export interface Categorie{
-//     id:number,
-//     name: string,
-//     slug?: string,
-//     image: string,
-//     createdAt ?:number,
-//     updatedAt?: number
-// }
+// Use the User interface inside AuthState
+export interface AuthState {
+  token: string | null;
+  user: User | null; // Ensure it can be null
+}
 export interface Category {
     _id: string;
     name: string;
@@ -24,11 +26,16 @@ export interface Product{
     category:Category
 }
 
-export interface User{
-    _id: string,
-    name: string,
-    email: string,
-    role: string,
-    createdAt: number,
-    updatedAt: number
+// export interface User{
+//     _id: string,
+//     name: string,
+//     email: string,
+//     role: string,
+//     createdAt: number,
+//     updatedAt: number
+// }
+
+export interface SignInForm {
+  email: string;
+  password: string;
 }

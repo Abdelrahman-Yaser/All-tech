@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Categorie } from "../interface";
 import { fetchData as fetchCategoriesData } from "../apis/queryKeys/Categories";
-
+import { Category } from "../interface";
 
 interface ProductsState {
-    items: Categorie[];
+    items: Category[];
     loading: 'idle' | 'pending' | 'succeeded' | 'failed';
     error: string | null;
 }

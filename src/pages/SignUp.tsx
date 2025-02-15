@@ -168,8 +168,8 @@ const SignUp: React.FC = () => {
         <div className="flex justify-between mb-4">
 
 
-        <Link to="/SignIn" className="w-full p-3 bg-gray-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 mr-2">SignIn</Link>
-        <Link to="/SignIn" className="w-full p-3 bg-green-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400">Sign Up</Link>
+        <Link to="/SignIn" className="w-full p-3 bg-gray-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 mr-2">Sign In</Link>
+        <Link to="/SignUp" className="w-full p-3 bg-green-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400">Sign Up</Link>
         </div>
         <h2 className="text-center text-lg font-semibold mb-4">Sign Up for Free</h2>
         <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required className="w-full p-2 border rounded bg-gray-700 text-white mt-2" />

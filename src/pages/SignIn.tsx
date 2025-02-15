@@ -1,109 +1,140 @@
-// import { useForm, SubmitHandler } from "react-hook-form";
-
-// type Inputs = {
-//   email: string;
-//   password: string;
-// };
-
-// export const Login = () => {
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm<Inputs>();
-
-//   const onSubmit: SubmitHandler<Inputs> = (data) => {
-//     console.log(data); // Process the form data
-//   };
-
-//   return (
-//     <form
-//       onSubmit={handleSubmit(onSubmit)}
-//       className="flex flex-col w-full max-w-md p-6 space-y-4 bg-white shadow-md rounded-lg mx-auto sm:p-8"
-//     >
-//       {/* Email Field */}
-//       <div className="flex flex-col">
-//         <label className="mb-1 font-medium text-gray-700">Email:</label>
-//         <input
-//           className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-//           {...register("email", { required: "Email is required" })}
-//           type="email"
-//           placeholder="Enter your email"
-//         />
-//         {errors.email && (
-//           <span className="text-red-500 text-sm mt-1">
-//             {errors.email.message}
-//           </span>
-//         )}
-//       </div>
-
-//       {/* Password Field */}
-//       <div className="flex flex-col">
-//         <label className="mb-1 font-medium text-gray-700">Password:</label>
-//         <input
-//           className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-//           {...register("password", {
-//             required: "Password is required",
-//             minLength: {
-//               value: 6,
-//               message: "Password must be at least 6 characters",
-//             },
-//           })}
-//           type="password"
-//           placeholder="Enter your password"
-//         />
-//         {errors.password && (
-//           <span className="text-red-500 text-sm mt-1">
-//             {errors.password.message}
-//           </span>
-//         )}
-//       </div>
-
-//       {/* Submit Button */}
-//       <button
-//         className="w-full px-4 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 transition-all duration-200"
-//         type="submit"
-//       >
-//         Submit
-//       </button>
-//     </form>
-//   );
-// };
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-interface SignInForm {
-  email: string;
-  password: string;
-}
+import { SignInForm } from "../interface";
+import api from "../apis/axios/Axios";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../state/Auth";
+import portfolio from "../assets/Portfoilo.png";
 
 const SignIn: React.FC = () => {
-  const [formData, setFormData] = useState<SignInForm>({
-    email: "",
-    password: "",
-  });
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState<SignInForm>({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [user, setUserState] = useState<{ name: string; email: string } | null>(null);
 
+  useEffect(() => {
+    // Check if user is already logged in
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserState(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle form submission (Sign In)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
+    setErrorMessage(null);
+
+    try {
+      const res = await api.post("/api/v1/auth/signin", formData);
+
+      if (res.data.token) {
+        const { token, user } = res.data;
+
+        // Dispatch token & user
+        dispatch(setToken(token));
+        dispatch(setUser({ name: user.name, email: user.email }));
+
+        // Store user data in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setUserState(user); // Update state to trigger re-render
+        console.log("Login successful:", res.data);
+      }
+    } catch (error: any) {
+      setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+    }
+  };
+
+  // Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUserState(null);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-200">
-      <form onSubmit={handleSubmit} className="bg-gray-800 text-white p-6 rounded-md shadow-lg w-96">
-        <div className="flex justify-between mb-4">
-<Link to="/SignIn" type="button" className="w-full p-3 bg-green-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 mr-2">SignIn</Link>
-        <Link to="/SignIn"   className="w-full p-3 bg-gray-500 text-white rounded-md mt-4 hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400">Sign Up</Link>
+    <div className="flex justify-center items-center min-h-screen">
+      {/* If user is logged in, show their details */}
+      {user ? (
+        <div className="bg-gray-800 text-white p-6 rounded-md shadow-lg w-96 text-center">
+          <img src={portfolio} className="w-20 h-20 rounded-full mx-auto border-2 border-green-500" alt="User" />
+          <h2 className="text-lg font-semibold">Welcome, {user.name} 👋</h2>
+          <p className="mt-2 text-sm text-gray-300">{user.email}</p>
+          <button
+            onClick={handleLogout}
+            className="w-full p-3 bg-red-500 text-white rounded-md mt-4 hover:bg-red-600"
+          >
+            Logout
+          </button>
         </div>
-        <h2 className="text-center text-lg font-semibold mb-4">Sign In</h2>
-        <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required className="w-full p-2 border rounded bg-gray-700 text-white mt-2" />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required className="w-full p-2 border rounded bg-gray-700 text-white mt-2" />
-        <button type="submit" className="w-full p-3 bg-green-500 text-white rounded-md mt-4 hover:bg-green-600">SIGN IN</button>
-      </form>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="bg-gray-800 text-white p-6 rounded-md shadow-lg w-96"
+        >
+          {/* Tabs for Sign In & Sign Up */}
+          <div className="flex justify-between mb-4">
+            <Link
+              to="/SignIn"
+              className="w-full p-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300 ease-in-out mr-2 text-center"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/SignUp"
+              className="w-full p-3 bg-gray-500 text-white rounded-md hover:bg-green-600 transition duration-300 ease-in-out text-center"
+            >
+              Sign Up
+            </Link>
+          </div>
+
+          <h2 className="text-center text-lg font-semibold mb-4">Sign In</h2>
+
+          {/* Display error message if login fails */}
+          {errorMessage && (
+            <div className="bg-red-500 text-white text-sm p-2 rounded-md mb-3">
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Email Input */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded bg-gray-700 text-white mt-2"
+          />
+
+          {/* Password Input */}
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded bg-gray-700 text-white mt-2"
+          />
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full p-3 bg-green-500 text-white rounded-md mt-4 hover:bg-green-600"
+          >
+            SIGN IN
+          </button>
+        </form>
+      )}
     </div>
   );
 };

@@ -2,10 +2,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MoodDark, MoodLight } from "../Components/ui/Mood";
+import { useSelector } from "react-redux";
+import { RootState } from "../state/Store";
 
 export const Header = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const user = useSelector((state: RootState) => state.auth.user); // ✅ Get user from Redux
 
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode") === "true";
@@ -54,8 +58,6 @@ export const Header = () => {
             isOpen ? "block" : "hidden"
           } absolute top-16 left-0 w-full dark:bg-gray-800 text-center py-4 rounded-md md:static md:flex md:items-center md:w-auto md:space-x-4 md:py-0`}
         >
-
-
           <Link
             onClick={closeNavbar}
             className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
@@ -71,71 +73,79 @@ export const Header = () => {
           >
             Product
           </Link>
-
-       
         </div>
-          <div className="flex">
-          <Link
-            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1 mr-4"
-            to="/SignIn"
-          >
-            SignIn
-          </Link>
 
-          <Link
-            className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
-            to="/SignUp"
-          >
-            SignUp
-          </Link>
-          <button
-          onClick={toggleDarkMode}
-          className="ml-4 bg-cyan-400 py-1 px-4 rounded dark:hover:bg-cyan-400 flex items-center"
-          aria-label="Toggle Dark Mode"
-        >
-          {darkMode ? <MoodDark /> : <MoodLight />}
-        </button>
-
-        <button
-          onClick={toggleNavbar}
-          className="text-white md:hidden ml-4"
-          aria-label="Toggle Navigation"
-          title="Dark"
-        >
-          {isOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+        <div className="flex items-center">
+          {/* ✅ If user is logged in, show name, otherwise show SignIn & SignUp */}
+          {user ? (
+            <p className="text-gray-700 dark:text-gray-300 mr-4">
+              Welcome, {user.name}!
+            </p>
           ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          )}
-        </button>
-          </div>
+            <>
+              <Link
+                className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1 mr-4"
+                to="/SignIn"
+              >
+                SignIn
+              </Link>
 
+              <Link
+                className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 transition-colors py-1"
+                to="/SignUp"
+              >
+                SignUp
+              </Link>
+            </>
+          )}
+
+          <button
+            onClick={toggleDarkMode}
+            className="ml-4 bg-cyan-400 py-1 px-4 rounded dark:hover:bg-cyan-400 flex items-center
+            "
+            aria-label="Toggle Dark Mode"
+          >
+            {darkMode ? <MoodDark /> : <MoodLight />}
+          </button>
+
+          <button
+            onClick={toggleNavbar}
+            className="text-white md:hidden ml-4"
+            aria-label="Toggle Navigation"
+          >
+            {isOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );
